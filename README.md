@@ -1,79 +1,42 @@
-# Inventory Master - Sistema de Inventario
+# Herramientas-Node-Api - Control de Almacén y Ventas
 
-Un sistema completo de gestión de inventario, clientes y ventas, construido con React (Frontend) y Node.js + Express + PostgreSQL (Backend).
+Plataforma integral para la administración de stock, control de clientes y registro de ventas. Desarrollada utilizando React.js para el cliente y Node.js con Express y PostgreSQL para la lógica del servidor.
 
-## 🚀 Requisitos Previos
+## 📌 Requerimientos del Sistema
 
-Asegúrate de tener instalado en tu computadora:
-- [Node.js](https://nodejs.org/) (Versión 18 o superior recomendada)
-- [Docker y Docker Compose](https://www.docker.com/) (Opcional, pero recomendado para la base de datos)
-- [PostgreSQL](https://www.postgresql.org/) (Solo si decides no usar Docker)
-
----
-
-## 🛠️ Configuración Inicial
-
-Antes de arrancar el proyecto, debes configurar las variables de entorno en ambas carpetas.
-
-### 1. Backend (Node.js API)
-1. Entra a la carpeta del backend: `cd herramientas-node-api`
-2. Copia el archivo de ejemplo para crear tu propio entorno:
-   - En Windows: `copy .env.example .env`
-   - En Mac/Linux: `cp .env.example .env`
-3. Abre el archivo `.env` recién creado y configura tus datos. Principalmente debes cambiar `JWT_SECRET` y asegurar que los datos de la Base de Datos coincidan.
-
-### 2. Frontend (React)
-1. Entra a la carpeta del frontend: `cd frontend-app`
-2. Copia el archivo de ejemplo:
-   - En Windows: `copy .env.example .env`
-   - En Mac/Linux: `cp .env.example .env`
-3. Verifica que `VITE_API_URL` apunte a `http://localhost:3000/api` (por defecto está listo).
+Antes de iniciar, verifica que cuentas con:
+- [Node.js](https://nodejs.org/) (v18+)
+- [PostgreSQL](https://www.postgresql.org/) (Motor de base de datos)
+- Opcional: [Docker y Docker Compose](https://www.docker.com/) para despliegue rápido en contenedores.
 
 ---
 
-## 🏃 Opción A: Ejecución Rápida con Docker Compose (Full Stack)
+## ⚙️ Variables de Entorno
 
-Si tienes Docker instalado, puedes levantar todo el sistema (Base de Datos + Backend + Frontend en Nginx) con un solo comando. Esta opción simula el entorno de producción.
+Es necesario definir los parámetros de conexión antes de ejecutar el aplicativo.
 
-1. Asegúrate de estar en la **raíz del proyecto** (donde está el `docker-compose.yml`).
-2. Configura las variables para Docker: Debes tener establecidas en tu entorno las variables `DB_PASSWORD` y `JWT_SECRET`. Si prefieres, puedes crear un archivo `.env` en la raíz del proyecto para que Docker las lea.
-3. Ejecuta:
+### Entorno del Servidor (API)
+1. Navega al directorio de la API: `cd stockflow-api` (o el nombre de tu carpeta backend).
+2. Duplica el archivo de muestra:
+   - Windows: `copy .env.example .env`
+   - Linux/Mac: `cp .env.example .env`
+3. Edita el `.env` para establecer tu propia firma en `JWT_SECRET` y configurar las credenciales de PostgreSQL.
+
+### Entorno del Cliente (Web)
+1. Accede al directorio del cliente: `cd stockflow-client` (o tu carpeta frontend).
+2. Duplica el archivo de configuración:
+   - Windows: `copy .env.example .env`
+   - Linux/Mac: `cp .env.example .env`
+3. Valida que la variable `VITE_API_URL` apunte correctamente al puerto de tu API (ej. `http://localhost:3000/api`).
+
+---
+
+## 🚀 Despliegue con Docker Compose (Recomendado)
+
+Levanta la infraestructura completa (BD, Servidor y Cliente vía Nginx) con un solo comando.
+
+1. Ubícate en la raíz donde reside el archivo `docker-compose.yml`.
+2. Asegúrate de tener exportadas las variables `DB_PASSWORD` y `JWT_SECRET` en tu terminal o en un `.env` global.
+3. Inicia los contenedores:
    ```bash
    docker-compose up --build -d
-   ```
-4. **Accesos:**
-   - Frontend: `http://localhost:80`
-   - Swagger / Documentación: `http://localhost:80/docs/`
-   - Base de Datos: Expuesta en el puerto `5438` (Usuario: `user`, BD: `tienda`).
-
----
-
-## 💻 Opción B: Ejecución Local para Desarrollo
-
-Esta es la mejor opción si planeas **modificar el código** y ver los cambios en tiempo real.
-
-### Paso 1: Levantar la Base de Datos
-Puedes instalar PostgreSQL localmente y crear la base de datos `tienda`, o bien, levantar *solo* la base de datos con Docker:
-```bash
-docker-compose up -d db
-```
-
-### Paso 2: Arrancar el Backend
-Abre una nueva terminal en la raíz del proyecto:
-```bash
-cd herramientas-node-api
-npm install
-npm run dev
-```
-*(El backend arrancará en el puerto `3000`)*
-
-### Paso 3: Arrancar el Frontend
-Abre una segunda terminal en la raíz del proyecto:
-```bash
-cd frontend-app
-npm install
-npm run dev
-```
-*(El frontend de React arrancará con Vite, normalmente en `http://localhost:5173`)*
-
-Listo. Accede a la URL que te muestra Vite en la consola para usar la aplicación. Las peticiones a `/api` serán redirigidas automáticamente a tu backend local gracias al proxy configurado en Vite.
