@@ -2,7 +2,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useCart } from '../hooks/useCart';
-import { ShoppingCart, Package, Users, Tags, ShoppingBag, TrendingUp, LogOut, Home } from 'lucide-react';
+import { ShoppingCart, Box, Users, Bookmark, Briefcase, Activity, LogOut, LayoutDashboard } from 'lucide-react';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import Badge from '../components/Badge';
@@ -23,141 +23,129 @@ export default function Dashboard() {
     navigate('/login');
   };
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  if (!isAuthenticated) return null;
 
   const menuItems = [
-    { title: 'Nueva Venta', description: 'Catálogo de productos', icon: ShoppingBag, path: '/catalogo', color: 'from-blue-500 to-blue-600' },
-    { title: 'Ventas', description: 'Historial de ventas', icon: TrendingUp, path: '/admin/ventas', color: 'from-green-500 to-green-600' },
-    { title: 'Productos', description: 'Gestiona el inventario', icon: Package, path: '/admin/productos', color: 'from-purple-500 to-purple-600' },
-    { title: 'Categorías', description: 'Administra categorías', icon: Tags, path: '/admin/categorias', color: 'from-orange-500 to-orange-600' },
-    { title: 'Clientes', description: 'Gestiona tus clientes', icon: Users, path: '/admin/clientes', color: 'from-cyan-500 to-cyan-600' },
-    ...(totalItems > 0 ? [{ title: 'Carrito', description: `${totalItems} producto(s)`, icon: ShoppingCart, path: '/carrito', color: 'from-indigo-500 to-indigo-600', highlight: true }] : []),
+    { title: 'Terminal de Venta', description: 'Facturación y catálogo', icon: Briefcase, path: '/catalogo', color: 'from-emerald-500 to-teal-600' },
+    { title: 'Transacciones', description: 'Registro histórico', icon: Activity, path: '/admin/ventas', color: 'from-slate-700 to-slate-900' },
+    { title: 'Inventario Base', description: 'Control de existencias', icon: Box, path: '/admin/productos', color: 'from-teal-600 to-cyan-700' },
+    { title: 'Clasificaciones', description: 'Jerarquía de productos', icon: Bookmark, path: '/admin/categorias', color: 'from-indigo-500 to-blue-600' },
+    { title: 'Directorio', description: 'Gestión de clientes', icon: Users, path: '/admin/clientes', color: 'from-violet-500 to-purple-600' },
+    ...(totalItems > 0 ? [{ title: 'Bandeja de Salida', description: `${totalItems} artículos en cola`, icon: ShoppingCart, path: '/carrito', color: 'from-rose-500 to-pink-600', highlight: true }] : []),
   ];
 
   const stats = [
-    { label: 'Productos', value: '0', change: '+0%', icon: Package },
-    { label: 'Clientes', value: '0', change: '+0%', icon: Users },
-    { label: 'Ventas', value: '$0', change: '+0%', icon: TrendingUp },
+    { label: 'Artículos Activos', value: '0', change: 'Métricas estables', icon: Box },
+    { label: 'Cartera de Clientes', value: '0', change: 'Actualizado hoy', icon: Users },
+    { label: 'Ingresos Mensuales', value: '$0.00', change: 'Ciclo actual', icon: Activity },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
-      {/* Header */}
-      <header className="bg-white shadow-md border-b border-border sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+    <div className="min-h-screen bg-slate-100 font-sans">
+      {/* Top Navbar */}
+      <header className="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <Home className="w-6 h-6 text-primary-foreground" />
+            <div className="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center border border-emerald-500/30">
+              <LayoutDashboard className="w-5 h-5 text-emerald-400" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Panel de Control</h1>
-              <p className="text-xs text-muted-foreground">Inventario Maestro</p>
+              <h1 className="text-lg font-bold tracking-wide">Centro de Operaciones</h1>
+              <p className="text-[10px] text-emerald-400 font-medium uppercase tracking-widest">StockFlow Env</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="hidden sm:block text-right">
-              <p className="text-sm font-medium text-foreground">Bienvenido, {user?.name}</p>
-              <p className="text-xs text-muted-foreground">{user?.email}</p>
+          <div className="flex items-center gap-6">
+            <div className="hidden sm:flex flex-col items-end">
+              <p className="text-sm font-semibold text-slate-200">{user?.name}</p>
+              <span className="px-2 py-0.5 bg-slate-800 rounded text-[10px] text-slate-400 font-mono">
+                {user?.email}
+              </span>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
+            <button
               onClick={handleLogout}
-              className="gap-2"
+              className="p-2 rounded-lg bg-slate-800 hover:bg-rose-500/20 hover:text-rose-400 text-slate-300 transition-colors group"
+              title="Cerrar sesión"
             >
-              <LogOut className="w-4 h-4" />
-              <span className="hidden sm:inline">Cerrar Sesión</span>
-            </Button>
+              <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            </button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 mb-8">
-          <Home className="w-4 h-4 text-primary" />
-          <span className="text-sm text-muted-foreground">Dashboard</span>
-        </div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        {/* KPI Dashboard */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {stats.map((stat) => {
             const Icon = stat.icon;
             return (
-              <Card key={stat.label} className="p-6 hover:shadow-lg transition-shadow">
+              <div key={stat.label} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <p className="text-sm text-muted-foreground font-medium">{stat.label}</p>
-                    <p className="text-3xl font-bold text-foreground mt-2">{stat.value}</p>
-                    <p className="text-xs text-secondary font-semibold mt-2">{stat.change} este mes</p>
+                  <div>
+                    <p className="text-sm text-slate-500 font-medium">{stat.label}</p>
+                    <p className="text-4xl font-extrabold text-slate-800 mt-2 tracking-tight">{stat.value}</p>
+                    <div className="flex items-center gap-1 mt-3">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                      <p className="text-xs text-slate-500">{stat.change}</p>
+                    </div>
                   </div>
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Icon className="w-6 h-6 text-primary" />
+                  <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center border border-slate-100">
+                    <Icon className="w-6 h-6 text-slate-400" />
                   </div>
                 </div>
-              </Card>
+              </div>
             );
           })}
         </div>
 
-        {/* Section Title */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-foreground mb-2">Accesos rápidos</h2>
-          <p className="text-muted-foreground">Atajos a las funciones principales del sistema</p>
-        </div>
+        <div>
+          <h2 className="text-xl font-bold text-slate-800 mb-1">Módulos del Sistema</h2>
+          <p className="text-sm text-slate-500 mb-6">Selecciona un área de trabajo para continuar</p>
 
-        {/* Menu Items Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.path}
-                onClick={() => navigate(item.path)}
-                className="group relative overflow-hidden"
-              >
-                <Card
-                  className="p-6 text-left h-full hover:shadow-xl transition-all cursor-pointer"
-                  clickable={true}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.path}
+                  onClick={() => navigate(item.path)}
+                  className="group relative overflow-hidden rounded-2xl text-left outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
                 >
-                  {/* Gradient background */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
+                  <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-90 group-hover:opacity-100 transition-opacity`}></div>
 
                   {item.highlight && (
-                    <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-indigo-500/20 to-transparent rounded-bl-full"></div>
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-white/20 blur-2xl rounded-full"></div>
                   )}
 
-                  <div className="relative z-10">
-                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${item.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                      <Icon className="w-6 h-6 text-white" />
-                    </div>
-
-                    <div className="flex items-start justify-between gap-2 mb-1">
-                      <h3 className="font-semibold text-foreground text-lg">{item.title}</h3>
-                      {item.highlight && <Badge variant="default">Nuevo</Badge>}
-                    </div>
-
-                    <p className="text-sm text-muted-foreground">{item.description}</p>
-
-                    {item.highlight && (
-                      <div className="mt-4 inline-block px-3 py-1 bg-indigo-50 rounded-full">
-                        <p className="text-xs font-semibold text-indigo-700">{item.description}</p>
+                  <div className="relative z-10 p-6 h-full flex flex-col justify-between min-h-[160px]">
+                    <div className="flex justify-between items-start">
+                      <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-inner">
+                        <Icon className="w-6 h-6 text-white" />
                       </div>
-                    )}
+                      {item.highlight && (
+                        <span className="px-2 py-1 bg-white/20 text-white text-[10px] font-bold rounded uppercase tracking-wider backdrop-blur-md">
+                          Activo
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="mt-6">
+                      <h3 className="font-bold text-white text-xl tracking-tight">{item.title}</h3>
+                      <p className="text-sm text-white/80 font-medium mt-1">{item.description}</p>
+                    </div>
                   </div>
-                </Card>
-              </button>
-            );
-          })}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Footer Info */}
-        <div className="mt-12 p-6 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-blue-900">
-            <span className="font-semibold">💡 Consejo:</span> Utiliza los accesos rápidos para navegar por el sistema. Todos los cambios se guardan automáticamente.
+        {/* System Message */}
+        <div className="mt-8 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-start gap-3">
+          <div className="w-2 h-2 mt-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+          <p className="text-sm text-emerald-800">
+            <strong>Sesión activa.</strong> Todas las operaciones y transacciones realizadas en este módulo quedan registradas bajo tu usuario para auditoría.
           </p>
         </div>
       </main>

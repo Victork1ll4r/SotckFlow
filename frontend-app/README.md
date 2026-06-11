@@ -1,3 +1,11 @@
+# StockFlow Client (React + TypeScript + Vite)
+
+Este directorio contiene la interfaz de usuario para el sistema de control de almacén, optimizada con Vite para recarga en caliente (HMR).
+
+## Instalación y Uso
+1. Ejecuta `npm install` o `bun install`.
+2. Inicia el servidor de desarrollo con `npm run dev`.
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
